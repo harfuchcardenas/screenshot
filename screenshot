@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Get the current working directory
+my $current_dir = `pwd`;
+chomp($current_dir);
+
+# Define the full path for the screenshot file
+my $file_path = "$current_dir/screenshot.png";
+
+# Use gnome-screenshot to take the screenshot and save it
+my $command = "gnome-screenshot --area -f \"$file_path\"";
+system($command) == 0
+    or die "Failed to take screenshot: $!";
+
+print "Screenshot saved to: $file_path\n";
