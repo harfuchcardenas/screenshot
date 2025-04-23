@@ -1,4 +1,4 @@
-Perl Screenshot Script ======================
+Perl Screenshot Script
 
 Overview:
 
