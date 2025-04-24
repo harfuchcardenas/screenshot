@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use File::Glob ':glob';
+use Cwd;
+
+# Get current working directory
+my $pwd = getcwd();
+
+# Append pwd to the filter string
+my $filter = "$pwd/screenshot.png";
+
+# Get list of files matching the filter
+my @files = bsd_glob($filter);
+
+
+# Filter PNG files with absolute paths and sort by creation time
+my @png_files = grep { /^\Q$pwd\E\/.*\.png$/ } @files;  # Matches files with $pwd and .png extension
+@png_files = sort { (stat($b))[9] <=> (stat($a))[9] } @png_files;
+
+# Check if there is a PNG file
+if (@png_files) {
+    my $last_created_file = $png_files[0];
+    print "Opening: $last_created_file\n";
+    chomp($last_created_file);
+    $last_created_file =~ s/^\s+|\s+$//g;
+    # Open the last created file with an absolute path
+    my $command = "gimp-2.10 /home/aharfuch/Dokumente/LinkedIn/LinkedIn-Learning/Rust/Notes/screenshot.png";
+    print "Executing: $command\n";
+    system($command) == 0
+        or die "Failed to execute GIMP: $!";
+}else {
+    print "No PNG files found matching the filter.\n";
+}
+my $command2 = "rm ";
+$command2 .= $filter;
+system("echo por borrar");
+system("$command2");
