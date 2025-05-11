@@ -11,7 +11,10 @@ my $file_path = "$current_dir/screenshot.png";
 
 # Use gnome-screenshot to take the screenshot and save it
 my $command = "gnome-screenshot --area -f \"$file_path\"";
-system($command) == 0
-    or die "Failed to take screenshot: $!";
+system($command);
 
-print "Screenshot saved to: $file_path\n";
+if (-e $file_path) {
+    print "Screenshot saved successfully!\n";
+} else {
+    print "Screenshot failed or was canceled.\n";
+}

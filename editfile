@@ -11,29 +11,17 @@ my $pwd = getcwd();
 # Append pwd to the filter string
 my $filter = "$pwd/screenshot.png";
 
-# Get list of files matching the filter
-my @files = bsd_glob($filter);
-
-
-# Filter PNG files with absolute paths and sort by creation time
-my @png_files = grep { /^\Q$pwd\E\/.*\.png$/ } @files;  # Matches files with $pwd and .png extension
-@png_files = sort { (stat($b))[9] <=> (stat($a))[9] } @png_files;
-
-# Check if there is a PNG file
-if (@png_files) {
-    my $last_created_file = $png_files[0];
-    print "Opening: $last_created_file\n";
-    chomp($last_created_file);
-    $last_created_file =~ s/^\s+|\s+$//g;
+if (-e $filter) {
+    chomp($filter);
     # Open the last created file with an absolute path
     my $command = "gimp-2.10\ ./screenshot.png";
-    print "Executing: $command\n";
     system($command) == 0
         or die "Failed to execute GIMP: $!";
-}else {
-    print "No PNG files found matching the filter.\n";
+} else {
+    print "Screenshot failed or was canceled.\n";
 }
+
 my $command2 = 'rm ./screenshot.png';
-my $erasing = 'echo "screen.png has been ereased."';
+my $erasing = 'echo "screenshot.png has been ereased."';
 system("$command2");
 system("$erasing");
